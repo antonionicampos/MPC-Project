@@ -1,5 +1,37 @@
-# MPC-Project
+# Model Predictive Control Project
+
 Self-driving Car Nanodegree Project 5/Term 2 - Implementation of a Model Predictive Control to drive a car around a track on a simulation.
+
+The state of the car on a specifically period of time was define by the following state: 
+
+$$
+[x, y, \psi, v, cte, e\psi]
+$$
+
+For the model, the update equations used the Global Kinematic Model which is modeled by the following equations (including the formula for the next cross track and orientation error).
+
+$$
+x_{t+1} = x_{t} + v_{t} . cos(\psi_{t}) . dt
+\\y_{t+1} = y_{t} + v_{t} . sin(\psi_{t}) . dt
+\\\psi_{t+1} = \psi_{t} + \dfrac{v_{t}}{L_{f}} . \delta . dt
+\\v_{t+1} = v_{t} + a_{t} . dt
+\\cte_{t+1} = cte_{t} - y_{t} + (v_{t} . sin(e\psi_{t}) . dt) 
+\\e\psi_{t+1} = \psi_{t} - \psi des_{t} + (\dfrac{v_{t}}{L_{f}} . \delta_{t} . dt)
+$$
+
+For the acuators, there was used the steering angle and acceleration defined by the following variables:
+
+$$
+[\phi, a]
+$$
+
+And the actuators were restricted between -25 and +25 degrees for the steering angle and between -1 and +1 for the acceleration.
+
+For the timestep length (N), I chose 12 because it wasn't to many to make the process too slow and it was a sufficient number. For the elapsed duration between timesteps (dt), I chose 0.1s (100 ms) to make easier to deal with the latency (also 100 ms).
+
+The waypoints was preprocessed suffering a rotation + translation transform from a global coordinate to the car's coordinate. Then a 3rd degree polynomial was fitted with the waypoints.
+
+With the latency of 100 ms, I used a dt of 100 ms and used the second pair of actuators calculated by the solve function to compensate the latency. 
 
 ---
 
